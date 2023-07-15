@@ -8,7 +8,7 @@ In construction...
   - Day -21 relative to calving;
   - Day 23 relative to calving;
   - Day 65 relative to calving;
-- Quality check: average 50 million reads per sample
+- Quality check: average 50 million reads per sample detected with `fastqc`
 - Trimming: Illumina universal adapters removed with `trimmomatic`
 - Contamination: Host reads were removed from samples with `kraken`
 - Taxonomy assignment: to be performed in `sourmash`
