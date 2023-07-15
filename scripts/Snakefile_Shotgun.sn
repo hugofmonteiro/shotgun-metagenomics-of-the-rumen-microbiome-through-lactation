@@ -1,0 +1,56 @@
+import os
+import glob
+import sys
+
+inpath = "/home/hfm/ER_rumenShotgun/ER_Nanuq/Sequences/"
+outpath = "/home/hfm/ER_rumenShotgun/ER_Nanuq/"
+
+
+SAMPLES=[] 
+for name in glob.glob(inpath+"*_R1.fastq.gz"):
+    ID = os.path.basename(name).split("_R1")[0]
+    if ID not in SAMPLES:
+        SAMPLES.append(ID)
+
+print('samples are:', SAMPLES, file=sys.stderr)
+
+rule all:
+    input:
+        fastqc1 = expand(outpath+"FASTQC/{sample}_R1_fastqc.html", sample=SAMPLES),
+        fastqc2 = expand(outpath+"FASTQC/{sample}_R2_fastqc.html", sample=SAMPLES),
+        trimmed1 = expand(outpath+"TRIMMED/{sample}_R1_trim.fastq.gz", sample=SAMPLES),
+        trimmed2 = expand(outpath+"TRIMMED/{sample}_R2_trim.fastq.gz", sample=SAMPLES),
+        se1 = expand(outpath+"TRIMMED/{sample}_R1_se.fastq.gz", sample=SAMPLES),
+        se2 = expand(outpath+"TRIMMED/{sample}_R2_se.fastq.gz", sample=SAMPLES)
+
+
+rule make_fastqc:
+    input:
+        read1 = inpath+"{sample}_R1.fastq.gz",
+        read2 = inpath+"{sample}_R2.fastq.gz"
+    output:
+        fastqc1 = outpath+"FASTQC/{sample}_R1_fastqc.html",
+        fastqc2 = outpath+"FASTQC/{sample}_R2_fastqc.html"
+    params:
+        outdir = outpath+"FASTQC/"
+    shell:
+        "mkdir -p {params.outdir} && fastqc {input} -o {params.outdir}"
+
+
+rule trimmomatic:
+    input:
+        read1 = inpath+"{sample}_R1.fastq.gz",
+        read2 = inpath+"{sample}_R2.fastq.gz"
+    output:
+        trimmed1 =  outpath+"TRIMMED/{sample}_R1_trim.fastq.gz",
+        trimmed2 =  outpath+"TRIMMED/{sample}_R2_trim.fastq.gz",
+        se1 = outpath+"TRIMMED/{sample}_R1_se.fastq.gz",
+        se2 = outpath+"TRIMMED/{sample}_R2_se.fastq.gz"
+    params:
+        adaptor = "/home/hfm/Rumen_Microbiome_Genomics/1_Sequences_Guanhui/all_illumina_trimmomatic_2022Aug01.fa"
+    conda:
+        "/home/hfm/Rumen_Microbiome_Genomics/1_Sequences_Guanhui/trimmomatic.yaml"
+    shell:"""
+        trimmomatic PE -quiet {input.read1} {input.read2} {output.trimmed1} {output.se1} {output.trimmed2} {output.se2}\
+        ILLUMINACLIP:{params.adaptor}:2:40:15 LEADING:2 TRAILING:2 SLIDINGWINDOW:4:15 MINLEN:50
+        """
