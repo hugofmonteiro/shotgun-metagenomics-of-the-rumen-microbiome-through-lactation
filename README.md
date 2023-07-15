@@ -2,12 +2,13 @@
 
 In construction...
 
-# Shotgun metagenomics analysis
+# Bioinformatic analyses
 
+- Deep shotgun metagenomic sequencing performed in a subset from 220 cows
 - 72 dairy cows sampled for the rumen microbiome at days:
-  - Day -21 relative to calving;
-  - Day 23 relative to calving;
-  - Day 65 relative to calving;
+  - Day -21 relative to calving
+  - Day 23 relative to calving
+  - Day 65 relative to calving
 - Quality check: average 50 million reads per sample detected with `fastqc`
 - Trimming: Illumina universal adapters removed with `trimmomatic`
 - Contamination: Host reads were removed from samples with `kraken`
