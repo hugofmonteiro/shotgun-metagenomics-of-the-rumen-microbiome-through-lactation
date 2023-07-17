@@ -17,6 +17,7 @@ In construction...
 # More info can be found by directly addressing some of the authors
 
 - Hugo F. Monteiro: hmonteiro@ucdavis.edu
+- Fabio S. Lima: falima@ucdavis.edu
 - Eduardo S. Ribeiro: eribeiro@uoguelph.ca
 
 # Publication details
